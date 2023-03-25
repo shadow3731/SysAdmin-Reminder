@@ -160,6 +160,23 @@ namespace SysAdmin_Remider
             System.Diagnostics.Process.Start("https://vk.com/v1rus/");
         }
 
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/folders/15FRvWMMctgolyPft0UNJ9VeP8oNrT8fj?usp=sharing");
+        }
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            switch (Settings.LanguageCode)
+            {
+                case 0: System.Diagnostics.Process.Start("https://drive.google.com/file/d/14GlR3UWS4O_-AGUCHxZ8wBq5cN-wiaGv/view?usp=share_link"); break;
+                case 1: System.Diagnostics.Process.Start("https://drive.google.com/file/d/1ppchyjfpuPockHuBcnDpQ7-BEsTsm_hN/view?usp=share_link"); break;
+            }
+        }
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
         private bool IsCorrectData()
         {
             if (comboBox1.SelectedItem == null) 
@@ -194,10 +211,11 @@ namespace SysAdmin_Remider
         {
             using (var httpClient = new HttpClient())
             {
-                string url = "https://raw.githubusercontent.com/shadow3731/SpringChatTest/master/LastVersion.txt";
+                string url = "https://raw.githubusercontent.com/shadow3731/SysAdmin-Reminder/master/LastVersion.txt";
                 HttpResponseMessage response = await httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
                 updateVersion = await response.Content.ReadAsStringAsync();
+                updateVersion = updateVersion.Substring(0, updateVersion.Length - 1);
                 
                 if (updateVersion != null && updateVersion != Settings.LanguagePack["CurrentVersion"])
                 {
