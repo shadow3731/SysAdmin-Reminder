@@ -11,11 +11,21 @@ namespace SysAdmin_Remider
 {
     internal class DatabaseConnector
     {
-        private const string DatabaseName = "sysadmin_reminder";
-        private const string TasksTableName = "tasks";
-        private const string ConnectionConfiguration = "datasource=127.0.0.1;port=3306;username=root;password=root;database=" + DatabaseName;
 
-        public static bool hasConnection()
+        private static string TasksTableName = "tasks";
+        private static string ConnectionConfiguration;
+
+        public static void SetConnectionConfiguration()
+        {
+            ConnectionConfiguration = "datasource=" + Settings.UserSettings["Address"]
+            + ";port=" + Settings.UserSettings["Port"]
+            + ";username=" + Settings.UserSettings["DBUsername"]
+            + ";password="+ Settings.UserSettings["DBPassword"]
+            + ";database=" + Settings.UserSettings["DBName"]
+            + ";charset=utf8mb4";
+        }
+
+        public static bool HasConnection()
         {
             MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
 
@@ -25,18 +35,52 @@ namespace SysAdmin_Remider
                 connection.Close();
                 return true;
             }
-            catch (Exception) 
-            { 
-                MessageBox.Show("Ошибка подключения к базе данных. Проверьте настройки соединения.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (Exception ex) 
+            {
+                MessageBox.Show(Settings.LanguagePack["DBConnectionFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false; 
             }
+        }
+
+        public static void CreateTableIfNotExists()
+        {
+            MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
+
+            string query1 = "ALTER DATABASE " + Settings.UserSettings["DBName"]
+                + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci";
+            MySqlCommand command1 = new MySqlCommand(query1, connection);
+
+            string query2 = "CREATE TABLE IF NOT EXISTS "
+                + Settings.UserSettings["DBName"] + "." + TasksTableName + "("
+                + "id BIGINT COLLATE utf8mb4_general_ci, " 
+                + "description TEXT COLLATE utf8mb4_general_ci, "
+                + "execution_time DATETIME COLLATE utf8mb4_general_ci, " 
+                + "priority VARCHAR(50) COLLATE utf8mb4_general_ci, "
+                + "status VARCHAR(30) COLLATE utf8mb4_general_ci, PRIMARY KEY (id))";
+            MySqlCommand command2 = new MySqlCommand(query2, connection);
+
+            try
+            {
+                connection.Open();
+
+                command1.ExecuteNonQuery();
+                command2.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show(Settings.LanguagePack["DBCreateTableFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (NotSupportedException) { }
+            catch (KeyNotFoundException) { }
         }
 
         public static long CountTasksQuery()
         {
             MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
 
-            string query = "SELECT COUNT(1) FROM " + DatabaseName + "." + TasksTableName;
+            string query = "SELECT COUNT(1) FROM " + Settings.UserSettings["DBName"] + "." + TasksTableName;
             MySqlCommand command = new MySqlCommand(query, connection);
 
             long amount = 0;
@@ -52,7 +96,7 @@ namespace SysAdmin_Remider
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка подсчета количества всех заданий в базе данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Settings.LanguagePack["DBCountFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return -1;
             }
         }
@@ -63,9 +107,41 @@ namespace SysAdmin_Remider
 
             MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
 
-            string query = "SELECT * FROM " + DatabaseName + "." + TasksTableName + " WHERE status=@status";
+            string query = "SELECT * FROM " + Settings.UserSettings["DBName"] + "." + TasksTableName;
             MySqlCommand command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@status", Status.Running);
+
+            try
+            {
+                connection.Open();
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Task task = new Task(long.Parse(reader.GetString(0)), reader.GetString(1), DateTime.Parse(reader.GetString(2)), reader.GetString(3), reader.GetString(4));
+                    tasks.Add(task);
+                }
+
+                reader.Close();
+                connection.Close();
+                return tasks;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Settings.LanguagePack["DBUploadFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        public static List<Task> GetTasksQuery(string status)
+        {
+            List<Task> tasks = new List<Task>();
+
+            MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
+
+            string query = "SELECT * FROM " + Settings.UserSettings["DBName"] + "." + TasksTableName + " WHERE status=@status";
+            MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@status", status);
 
             try
             {
@@ -85,7 +161,7 @@ namespace SysAdmin_Remider
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка выгрузки активных заданий из базы данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Settings.LanguagePack["DBUploadActiveFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -98,7 +174,7 @@ namespace SysAdmin_Remider
             {
                 MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
 
-                string query = "INSERT INTO " + DatabaseName + "." + TasksTableName + " VALUES"
+                string query = "INSERT INTO " + Settings.UserSettings["DBName"] + "." + TasksTableName + " VALUES"
                     + "(@id, @description, @executionTime, @priority, @status)";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", ++tasksAmount);
@@ -119,7 +195,7 @@ namespace SysAdmin_Remider
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка добавления задания в базу данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Settings.LanguagePack["DBSaveFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -131,7 +207,7 @@ namespace SysAdmin_Remider
         {
             MySqlConnection connection = new MySqlConnection(ConnectionConfiguration);
 
-            string query = "UPDATE " + DatabaseName + "." + TasksTableName
+            string query = "UPDATE " + Settings.UserSettings["DBName"] + "." + TasksTableName
                 + " SET description=@description, execution_time=@executionTime, priority=@priority, status=@status"
                 + " WHERE id=@id";
             MySqlCommand command = new MySqlCommand(query, connection);
@@ -152,7 +228,7 @@ namespace SysAdmin_Remider
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка обновления задания в базе данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Settings.LanguagePack["DBUpdateFailed"] + "\n" + ex.Message, Settings.LanguagePack["Error"], MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }

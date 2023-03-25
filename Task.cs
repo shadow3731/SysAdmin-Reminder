@@ -13,6 +13,7 @@ namespace SysAdmin_Remider
         public string Description { get; set; }
         public DateTime ExecutionTime { get; set; }
         public object Priority { get; set; }
+        public string Status { get; set; }
 
         public Task(long Id, string Description, DateTime ExecutionTime, object Priority)
         {
@@ -20,6 +21,15 @@ namespace SysAdmin_Remider
             this.Description = Description;
             this.ExecutionTime = ExecutionTime;
             this.Priority = Priority;
+        }
+
+        public Task(long Id, string Description, DateTime ExecutionTime, object Priority, string Status)
+        {
+            this.Id = Id;
+            this.Description = Description;
+            this.ExecutionTime = ExecutionTime;
+            this.Priority = Priority;
+            this.Status = Status;
         }
 
         public Task() { }

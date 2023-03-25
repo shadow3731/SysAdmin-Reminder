@@ -8,9 +8,9 @@ namespace SysAdmin_Remider
 {
     internal class Status
     {
-        public static string Running { get; } = "Running";
-        public static string Finished { get; } = "Finished";
-        public static string Cancelled { get; } = "Cancelled";
+        public static string Running { get; set; } = "В процессе";
+        public static string Finished { get; set; } = "Завершён";
+        public static string Cancelled { get; set; } = "Отменён";
         public static string[] All { get; } = { Running, Finished, Cancelled };
     }
 }

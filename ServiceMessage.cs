@@ -8,12 +8,14 @@ namespace SysAdmin_Remider
 {
     internal class ServiceMessage
     {
-        public static string ApplicationLaunched { get; } = "Приложение запущено.";
-        public static string TasksLoaded { get; } = "Активные задания выгружены.";
-        public static string TaskAdded { get; } = "Задание добавлено.";
-        public static string TaskUpdated { get; } = "Задание обновлено.";
-        public static string TaskRollback { get; } = "Задание не обновлено.";
-        public static string TaskFinished { get; } = "Задание завершено.";
-        public static string TaskCancelled { get; } = "Задание отменено.";
+        public static string ApplicationLaunched { get; set; } = null;
+        public static string TasksLoaded { get; set; } = null;
+        public static string TaskSaving { get; set; } = null;
+        public static string TaskAdded { get; set; } = null;
+        public static string TaskNotAdded { get; set; } = null;
+        public static string TaskUpdated { get; set; } = null;
+        public static string TaskRollback { get; set; } = null;
+        public static string TaskFinished { get; set; } = null;
+        public static string TaskCancelled { get; set; } = null;
     }
 }
