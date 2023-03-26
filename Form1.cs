@@ -245,6 +245,17 @@ namespace SysAdmin_Remider
             }
         }
 
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 4)
+            {
+                e.CellStyle.BackColor = Color.White;
+                e.CellStyle.ForeColor = Color.Black;
+            }
+        }
+
         private void EndTaskMenuItem_Click(object sender, EventArgs e)
         {
             int rowId = dataGridView1.CurrentCell.RowIndex;
@@ -418,7 +429,6 @@ namespace SysAdmin_Remider
         private System.Windows.Forms.Timer ConfigureTimer(Task task, int colorMills, int? nextColorMills, int timerIndex, int colorId)
         {
             TimeSpan interval = task.ExecutionTime - DateTime.Now;
-
             
             if (interval.TotalMilliseconds > Settings.CollorMills[0])
             {
@@ -464,7 +474,5 @@ namespace SysAdmin_Remider
             
             return null;
         }
-
-        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
     }
 }
