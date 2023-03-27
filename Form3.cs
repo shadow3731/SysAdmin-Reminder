@@ -174,7 +174,11 @@ namespace SysAdmin_Remider
         }
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-
+            switch (Settings.LanguageCode)
+            {
+                case 0: System.Diagnostics.Process.Start("https://disk.yandex.ru/i/tVkGIZh2ZtQTig"); break;
+                case 1: System.Diagnostics.Process.Start("https://disk.yandex.ru/i/uWLwHeo46ouqkA"); break;
+            }
         }
 
         private bool IsCorrectData()

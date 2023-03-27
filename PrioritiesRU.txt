@@ -1,0 +1,5 @@
+PriorityLittle: 'Незначительный';
+PriorityLow: 'Низкий';
+PriorityMedium: 'Средний';
+PriorityHigh: 'Высокий';
+PriorityCritical: 'Критический';

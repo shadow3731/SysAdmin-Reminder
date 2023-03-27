@@ -64,7 +64,7 @@ namespace SysAdmin_Remider
                 data += keys[i] + ": '" + values[i] + "';\n";
             }
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserSettings.txt");
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "UserSettings.txt");
             StreamWriter writer = new StreamWriter(filePath);
             writer.Write(data);
             writer.Close();
@@ -81,7 +81,7 @@ namespace SysAdmin_Remider
 
         private static string[][] LoadData(string fileName)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, fileName);
             StreamReader reader = new StreamReader(filePath);
             string content = reader.ReadToEnd();
             reader.Close();
