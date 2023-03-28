@@ -162,7 +162,7 @@ namespace SysAdmin_Remider
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://drive.google.com/drive/folders/15FRvWMMctgolyPft0UNJ9VeP8oNrT8fj?usp=sharing");
+            System.Diagnostics.Process.Start("https://disk.yandex.ru/d/q8qHhvBSmTN61A");
         }
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
