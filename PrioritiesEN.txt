@@ -1,5 +1,0 @@
-PriorityLittle: 'Little';
-PriorityLow: 'Low';
-PriorityMedium: 'Medium';
-PriorityHigh: 'High';
-PriorityCritical: 'Critical';

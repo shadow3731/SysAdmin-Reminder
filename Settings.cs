@@ -64,24 +64,15 @@ namespace SysAdmin_Remider
                 data += keys[i] + ": '" + values[i] + "';\n";
             }
 
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "UserSettings.txt");
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserSettings.txt");
             StreamWriter writer = new StreamWriter(filePath);
             writer.Write(data);
             writer.Close();
         }
 
-        private static void LoadLanguagePack(string langFileName)
-        {
-            string[][] data = LoadData(langFileName);
-            for (int i = 0; i < data[0].Length; i++)
-            {
-                LanguagePack.Add(data[0][i], data[1][i]);
-            }
-        }
-
         private static string[][] LoadData(string fileName)
         {
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, fileName);
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             StreamReader reader = new StreamReader(filePath);
             string content = reader.ReadToEnd();
             reader.Close();
@@ -91,6 +82,15 @@ namespace SysAdmin_Remider
 
             string[][] data = { keys, values };
             return data;
+        }
+
+        private static void LoadLanguagePack(string langFileName)
+        {
+            string[][] data = LoadData(langFileName);
+            for (int i = 0; i < data[0].Length; i++)
+            {
+                LanguagePack.Add(data[0][i], data[1][i]);
+            }
         }
 
         private static void SetCollorMilles()
