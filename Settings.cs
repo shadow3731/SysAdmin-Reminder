@@ -64,7 +64,7 @@ namespace SysAdmin_Remider
                 data += keys[i] + ": '" + values[i] + "';\n";
             }
 
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserSettings.txt");
+            string filePath = Path.Combine(Path.GetTempPath() + "\\RarSFX2\\", "UserSettings.txt");
             StreamWriter writer = new StreamWriter(filePath);
             writer.Write(data);
             writer.Close();
@@ -72,7 +72,7 @@ namespace SysAdmin_Remider
 
         private static string[][] LoadData(string fileName)
         {
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            string filePath = Path.Combine(Path.GetTempPath() + "\\RarSFX2\\", fileName);
             StreamReader reader = new StreamReader(filePath);
             string content = reader.ReadToEnd();
             reader.Close();
