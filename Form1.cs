@@ -312,7 +312,9 @@ namespace SysAdmin_Remider
 
                 DatabaseConnector.CreateTableIfNotExists();
 
+                dataGridView1.DataSource = null;
                 dataGridView1.Rows.Clear();
+                dataGridView1.Columns.Clear();
 
                 timers.Clear();
 

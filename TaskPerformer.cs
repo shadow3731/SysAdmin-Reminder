@@ -171,38 +171,44 @@ namespace SysAdmin_Remider
         public static void DataGridView_CreateColumns(DataGridView dataGridView)
         {
             DataGridViewTextBoxColumn column1 = new DataGridViewTextBoxColumn();
-            column1.Name = "Column2";
-            column1.HeaderText = Settings.LanguagePack["ID"];
-            column1.ToolTipText = Settings.LanguagePack["IDTip"];
-            column1.Width = 60;
+            column1.Name = "Column1";
+            column1.Visible = false;
+            column1.Width = 0;
             column1.ReadOnly = true;
 
             DataGridViewTextBoxColumn column2 = new DataGridViewTextBoxColumn();
-            column2.Name = "Column3";
-            column2.HeaderText = Settings.LanguagePack["Description"];
-            column2.ToolTipText = Settings.LanguagePack["DescriptionTip"];
-            column2.Width = 758;
+            column2.Name = "Column2";
+            column2.HeaderText = Settings.LanguagePack["ID"];
+            column2.ToolTipText = Settings.LanguagePack["IDTip"];
+            column2.Width = 60;
+            column2.ReadOnly = true;
 
             DataGridViewTextBoxColumn column3 = new DataGridViewTextBoxColumn();
-            column3.Name = "Column4";
-            column3.HeaderText = Settings.LanguagePack["ProceedAt"];
-            column3.ToolTipText = Settings.LanguagePack["ProceedAt"];
-            column3.Width = 150;
+            column3.Name = "Column3";
+            column3.HeaderText = Settings.LanguagePack["Description"];
+            column3.ToolTipText = Settings.LanguagePack["DescriptionTip"];
+            column3.Width = 758;
 
-            DataGridViewComboBoxColumn column4 = new DataGridViewComboBoxColumn();
-            column4.Name = "Column5";
-            column4.HeaderText = Settings.LanguagePack["Priority"];
-            column4.ToolTipText = Settings.LanguagePack["PriorityTip"];
-            column4.Width = 130;
+            DataGridViewTextBoxColumn column4 = new DataGridViewTextBoxColumn();
+            column4.Name = "Column4";
+            column4.HeaderText = Settings.LanguagePack["ProceedAt"];
+            column4.ToolTipText = Settings.LanguagePack["ProceedAt"];
+            column4.Width = 150;
+
+            DataGridViewComboBoxColumn column5 = new DataGridViewComboBoxColumn();
+            column5.Name = "Column5";
+            column5.HeaderText = Settings.LanguagePack["Priority"];
+            column5.ToolTipText = Settings.LanguagePack["PriorityTip"];
+            column5.Width = 130;
 
             List<string> priorities = new List<string>(Priority.All.Length);
             for (int i = 0; i < Priority.All.Length; i++)
             {
                 priorities.Add(Priority.All[i][Settings.LanguageCode]);
             }
-            column4.Items.AddRange(priorities.ToArray());
+            column5.Items.AddRange(priorities.ToArray());
 
-            dataGridView.Columns.AddRange(column1, column2, column3, column4);
+            dataGridView.Columns.AddRange(column1, column2, column3, column4, column5);
         }
 
         private static void DataGridView_SetID(long id, DataGridView dataGridView, int row, bool readOnly)
