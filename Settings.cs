@@ -10,7 +10,7 @@ namespace SysAdmin_Remider
 {
     internal class Settings
     {
-        private static string RootPath = @"C:\Program Files\SysAdmin Reminder\";
+        private static string RootPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static Dictionary<string, string> DefaultUserSettings { get; } = new Dictionary<string, string>();
         public static Dictionary<string, string> UserSettings { get; set; } = new Dictionary<string, string>();
         public static Dictionary<string, string> LanguagePack { get; set; } = new Dictionary<string, string>();
@@ -92,24 +92,32 @@ namespace SysAdmin_Remider
             string[] files = { "DefaultUserSettings.txt", "UserSettings.txt", "LanguagePackEN.txt",
                 "LanguagePackRU.txt", "PrioritiesEN.txt", "PrioritiesRU.txt" };
 
-            if (!Directory.Exists(RootPath))
+            if (!Directory.Exists(RootPath)) { Directory.CreateDirectory(RootPath); }
+
+            for (int i = 0; i < files.Length; i++)
             {
-                Directory.CreateDirectory(RootPath);
+                string filePath = Path.Combine(RootPath, files[i]);
 
-                for (int i = 0; i < files.Length; i++) 
+                if (!File.Exists(filePath))
                 {
-                    string filePath = Path.Combine(RootPath, files[i]);
-                    if (!File.Exists(filePath))
-                    {
-                        string readerPath = Path.Combine(Path.GetTempPath() + "\\SysAdmin Reminder\\", files[i]);
-                        StreamReader reader = new StreamReader(readerPath);
-                        string data = reader.ReadToEnd();
-                        reader.Close();
+                    string readerPath = null;
 
-                        StreamWriter writer = File.CreateText(filePath);
-                        writer.Write(data);
-                        writer.Close();
+                    if (Directory.Exists(Path.GetTempPath() + "\\SysAdmin Reminder\\"))
+                    {
+                        readerPath = Path.Combine(Path.GetTempPath() + "\\SysAdmin Reminder\\", files[i]);
                     }
+                    else
+                    {
+                        readerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, files[i]);
+                    }
+
+                    StreamReader reader = new StreamReader(readerPath);
+                    string data = reader.ReadToEnd();
+                    reader.Close();
+
+                    StreamWriter writer = File.CreateText(filePath);
+                    writer.Write(data);
+                    writer.Close();
                 }
             }
         }

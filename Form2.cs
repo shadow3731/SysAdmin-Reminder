@@ -25,6 +25,10 @@ namespace SysAdmin_Remider
 
             List<Task> tasks = DatabaseConnector.GetTasksQuery();
 
+            dataGridView1.DataSource = null;
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+
             TaskPerformer.DataGridView_CreateColumns(dataGridView1);
             TaskPerformer.LoadTasks(tasks, dataGridView1, true);
         }
