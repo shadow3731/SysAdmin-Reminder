@@ -100,17 +100,7 @@ namespace SysAdmin_Remider
 
                 if (!File.Exists(filePath))
                 {
-                    string readerPath = null;
-
-                    if (Directory.Exists(Path.GetTempPath() + "\\SysAdmin Reminder\\"))
-                    {
-                        readerPath = Path.Combine(Path.GetTempPath() + "\\SysAdmin Reminder\\", files[i]);
-                    }
-                    else
-                    {
-                        readerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, files[i]);
-                    }
-
+                    string readerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, files[i]);
                     StreamReader reader = new StreamReader(readerPath);
                     string data = reader.ReadToEnd();
                     reader.Close();
